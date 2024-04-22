@@ -4,7 +4,7 @@ resource "aws_vpc" "main" {
   enable_dns_hostnames = true
 }
 
-# Sub-redes públicas
+# Sub-redes 
 resource "aws_subnet" "public1" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.1.0/24"
@@ -53,6 +53,24 @@ resource "aws_route_table_association" "public3_assoc" {
   subnet_id      = aws_subnet.public3.id
   route_table_id = aws_route_table.public.id
 }
+
+
+
+resource "aws_eip" "example" {
+  vpc = true
+}
+
+resource "aws_nat_gateway" "example" {
+  allocation_id = aws_eip.example.id
+  subnet_id     = aws_subnet.public1.id
+}
+
+resource "aws_route" "internet_access" {
+  route_table_id         = aws_route_table.public.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.example.id
+}
+
 
 # VPC ID
 output "vpc_id" {

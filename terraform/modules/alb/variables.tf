@@ -5,3 +5,8 @@ variable "security_group_id" {
 variable "subnet_ids" {
   description = "Subnets"
 }
+
+
+variable "target_group_arn" {
+  description = "Target ARN"
+}
