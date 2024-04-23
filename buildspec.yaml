@@ -17,9 +17,18 @@ phases:
       - aws ec2 wait image-available --image-ids $AMI_ID
       # Excluir a instância
       - aws ec2 terminate-instances --instance-ids $INSTANCE_ID
-      
+
+
       # Listar e pegar o primeiro ID do launch template
       - LAUNCH_TEMPLATE_ID=$(aws ec2 describe-launch-templates --query 'LaunchTemplates[0].LaunchTemplateId' --output text)
+      
+      # Listar todas as versões do launch template e extrair números de versão
+      - version_numbers=$(aws ec2 describe-launch-template-versions --launch-template-id $LAUNCH_TEMPLATE_ID --query 'LaunchTemplateVersions[*].VersionNumber' --output text)
+      # Encontrar o número máximo entre os números de versão
+      - max_version=$(echo "$version_numbers" | tr '\t' '\n' | sort -nr | head -n 1)
+      # Adicionar +1 ao número máximo
+      - Latest=$((max_version + 1))
+      
       # Criar uma nova versão do launch template modificando o image_id
-      - aws ec2 create-launch-template-version --launch-template-id $LAUNCH_TEMPLATE_ID --image-id $AMI_ID
+      - aws ec2 create-launch-template-version --launch-template-id $LAUNCH_TEMPLATE_ID --source-version $Latest --image-id $AMI_ID
       
