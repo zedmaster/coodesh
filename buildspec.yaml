@@ -12,12 +12,12 @@ phases:
       # Esperar até que a instância esteja em execução
       - aws ec2 wait instance-running --instance-ids $INSTANCE_ID
       # Criar uma AMI da instância
-      - AMI_ID=$(aws ec2 create-image --instance-id $INSTANCE_ID --no-reboot --output text)
+      - AMI_ID=$(aws ec2 create-image --instance-id $INSTANCE_ID --name "V$INSTANCE_ID" --no-reboot --output text)
       # Esperar até que a AMI esteja disponível
       - aws ec2 wait image-available --image-ids $AMI_ID
       # Excluir a instância
       - aws ec2 terminate-instances --instance-ids $INSTANCE_ID
-
+      
       # Listar e pegar o primeiro ID do launch template
       - LAUNCH_TEMPLATE_ID=$(aws ec2 describe-launch-templates --query 'LaunchTemplates[0].LaunchTemplateId' --output text)
       # Criar uma nova versão do launch template modificando o image_id
