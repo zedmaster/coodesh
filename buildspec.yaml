@@ -30,5 +30,5 @@ phases:
       - Latest=$((max_version + 1))
       
       # Criar uma nova versão do launch template modificando o image_id
-      - LAUNCH_TEMPLATE_DATA='{"ImageId": "'"$AMI_ID"'"}'
+      - LAUNCH_TEMPLATE_DATA=$(jq -n --arg ami_id "$AMI_ID" '{"ImageId": $ami_id}')
       - aws ec2 create-launch-template-version --launch-template-id $LAUNCH_TEMPLATE_ID --source-version $Latest --image-id $AMI_ID --launch-template-data $LAUNCH_TEMPLATE_DATA
