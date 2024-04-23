@@ -1,5 +1,9 @@
 # Projeto COODESH
 
+Este projeto é um teste para admissão.
+O teste consiste em montar um ambiente utilizando IAC para criar a rede, as subnets, o Aplication Load Balance, o Auto Scaling, o Target Group e o template para subir o EC2 com a aplicação, que é um site com apenas um html. 
+A outra parte do teste consiste em utilizar o AWS Pipeline para realizar a atualização da aplicação, a cada vez que for feito um commit no branch main.
+
 ## Descrição das tecnologias
 
 Para realizar a construção da estrutura utilizando IAC e a utilização de CI/CD foram utilizadas as seguintes tectnologias:

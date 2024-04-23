@@ -84,6 +84,7 @@ resource "aws_autoscaling_group" "example" {
     version = "$Latest"
   }
 
+  name                = "web-auto-scaling"
   vpc_zone_identifier = var.subnet_ids
   min_size            = 1
   max_size            = 2
