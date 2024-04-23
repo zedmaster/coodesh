@@ -3,7 +3,7 @@ resource "aws_lb_target_group" "web" {
   port        = 80
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
-  target_type = "instance" # Ou "ip" se estiver usando IPs como alvos
+  target_type = "instance"
 
   health_check {
     path                = "/"

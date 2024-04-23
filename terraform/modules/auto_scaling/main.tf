@@ -3,7 +3,7 @@ variable "nginx_install_script" {
   default     = <<EOF
 #!/bin/bash
 apt-get update -y
-apt-get install -y nginx git
+apt-get install -y nginx git ec2-instance-connect
 git config --global user.name "ubuntu"
 git config --global user.email "ubuntu@email.com"
 git clone https://github.com/zedmaster/coodesh.git
@@ -11,6 +11,34 @@ cp -R coodesh/app/* /var/www/html/
 service nginx restart
 EOF
 }
+
+
+resource "aws_iam_instance_profile" "ssm_profile" {
+  name = "ssm-profile"
+  role = aws_iam_role.ssmservice.name
+}
+
+resource "aws_iam_role" "ssmservice" {
+  name = "ssm-service-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect = "Allow"
+      Principal = {
+        Service = "ec2.amazonaws.com"
+      }
+      Action = "sts:AssumeRole"
+    }]
+  })
+
+  managed_policy_arns = [
+    "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+  ]
+}
+
+
+
 
 resource "aws_launch_template" "example" {
   name_prefix   = "example-launch-template-"
@@ -26,7 +54,28 @@ resource "aws_launch_template" "example" {
     }
   }
 
+  network_interfaces {
+    associate_public_ip_address = true
+
+    security_groups = [var.security_group_id]
+  }
+
+  key_name  = "uzed"
   user_data = base64encode(var.nginx_install_script)
+
+
+  iam_instance_profile {
+    name = aws_iam_instance_profile.ssm_profile.name
+  }
+
+  metadata_options {
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 1
+    http_endpoint               = "enabled"
+  }
+
+
+
 }
 
 resource "aws_autoscaling_group" "example" {
