@@ -26,8 +26,8 @@ phases:
       - version_numbers=$(aws ec2 describe-launch-template-versions --launch-template-id $LAUNCH_TEMPLATE_ID --query 'LaunchTemplateVersions[*].VersionNumber' --output text)
       # Encontrar o número máximo entre os números de versão
       - max_version=$(echo "$version_numbers" | tr '\t' '\n' | sort -nr | head -n 1)
-      # Adicionar +1 ao número máximo
-      - Latest=$((max_version + 1))
+      # Número máximo
+      - Latest=$((max_version))
       
       # Criar uma nova versão do launch template modificando o image_id
       - |
