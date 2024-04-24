@@ -44,5 +44,5 @@ phases:
 artifacts:
   files: 
     - info.txt
-    - aws/appspec.yml
-    - aws/scripts/* 
+    - appspec.yml
+    - scripts/* 
