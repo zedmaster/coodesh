@@ -81,7 +81,7 @@ resource "aws_launch_template" "example" {
     http_endpoint               = "enabled"
   }
 
-  #tags = { env = "all" }
+  tags = { env = "all" }
 
 }
 

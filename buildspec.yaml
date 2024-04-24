@@ -17,7 +17,7 @@ phases:
       # Encontrar o ID do grupo de segurança chamado "web"
       - SECURITY_GROUP_ID=$(aws ec2 describe-security-groups --filters Name=group-name,Values=web --query 'SecurityGroups[0].GroupId' --output text)
       # Iniciar uma instância EC2
-      - aws ec2 run-instances --image-id ami-080e1f13689e07408 --instance-type t2.micro --subnet-id 'subnet-08153eb51832aa705' --security-group-ids $SECURITY_GROUP_ID --user-data '#!/bin/bash\napt-get update -y\napt-get install -y nginx ruby git\ngit config --global user.name "ubuntu"\ngit config --global user.email "ubuntu@email.com"\ngit clone https://github.com/zedmaster/coodesh.git\ncp -R coodesh/app/* /var/www/html/\nservice nginx restart\nwget https://aws-codedeploy-us-east-1.s3.amazonaws.com/latest/install \nchmod +x install \n./install auto \nservice codedeploy-agent status' > instance_output.json
+      - aws ec2 run-instances --image-id ami-080e1f13689e07408 --instance-type t2.micro --subnet-id 'subnet-08153eb51832aa705' --security-group-ids $SECURITY_GROUP_ID --user-data '#!/bin/bash\napt-get update -y\napt-get install -y nginx ruby git\ngit config --global user.name "ubuntu"\ngit config --global user.email "ubuntu@email.com" \ngit clone https://github.com/zedmaster/coodesh.git\ncp -R coodesh/app/* /var/www/html/\nservice nginx restart \nwget https://aws-codedeploy-us-east-1.s3.amazonaws.com/latest/install \nchmod +x install \nruby install auto \nservice codedeploy-agent status' > instance_output.json
       # Extrair o ID da instância criada
       - INSTANCE_ID=$(jq -r '.Instances[0].InstanceId' instance_output.json)
       # Esperar até que a instância esteja em execução
