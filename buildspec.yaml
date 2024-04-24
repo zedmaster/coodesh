@@ -28,8 +28,13 @@ phases:
       - max_version=$(echo "$version_numbers" | tr '\t' '\n' | sort -nr | head -n 1)
       # Número máximo
       - Latest=$((max_version))
+
+      - echo "$LAUNCH_TEMPLATE_ID" > info.txt
       
       # Criar uma nova versão do launch template modificando o image_id
       - |
         LAUNCH_TEMPLATE_DATA='{"ImageId": "'$AMI_ID'"}'
         aws ec2 create-launch-template-version --launch-template-id $LAUNCH_TEMPLATE_ID --source-version $Latest --launch-template-data "$LAUNCH_TEMPLATE_DATA"
+
+artifacts:
+  files: info.txt
