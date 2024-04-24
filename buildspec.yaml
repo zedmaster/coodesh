@@ -42,4 +42,7 @@ phases:
         aws ec2 create-launch-template-version --launch-template-id $LAUNCH_TEMPLATE_ID --source-version $Latest --launch-template-data "$LAUNCH_TEMPLATE_DATA"
 
 artifacts:
-  files: info.txt
+  files: 
+    - info.txt
+    - appspec.yml
+    - scripts/* 
