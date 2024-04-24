@@ -34,3 +34,37 @@ module "auto_scaling" {
     module.alb
   ]
 }
+
+
+module "iam" {
+  source = "./modules/iam"
+}
+
+module "codestar" {
+  source          = "./modules/codestar"
+  connection_name = ""
+  github_token    = var.github_token
+}
+
+module "codebuild" {
+  source             = "./modules/codebuild"
+  github_owner       = var.github_owner
+  github_repo        = var.github_repo
+  codebuild_role_arn = module.iam.codebuild_role_arn
+}
+module "codedeploy" {
+  source              = "./modules/codedeploy"
+  codedeploy_role_arn = module.iam.codedeploy_role_arn
+}
+
+module "codepipeline" {
+  source                           = "./modules/codepipeline"
+  github_owner                     = var.github_owner
+  github_repo                      = var.github_repo
+  github_token                     = var.github_token
+  s3_bucket                        = var.s3_bucket
+  pipeline_role_arn                = module.iam.pipeline_role_arn
+  codebuild_project_name           = module.codebuild.codebuild_project_name
+  codedeploy_app_name              = module.codedeploy.codedeploy_app_name
+  codedeploy_deployment_group_name = module.codedeploy.codedeploy_deployment_group_name
+}
