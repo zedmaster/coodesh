@@ -9,6 +9,11 @@ git config --global user.email "ubuntu@email.com"
 git clone https://github.com/zedmaster/coodesh.git
 cp -R coodesh/app/* /var/www/html/
 service nginx restart
+wget https://aws-codedeploy-us-east-1.s3.amazonaws.com/latest/install
+chmod +x install
+./install auto
+service codedeploy-agent status
+cat /var/log/aws/codedeploy-agent/codedeploy-agent.log
 EOF
 }
 
