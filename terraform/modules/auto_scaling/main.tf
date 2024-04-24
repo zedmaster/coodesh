@@ -3,7 +3,7 @@ variable "nginx_install_script" {
   default     = <<EOF
 #!/bin/bash
 apt-get update -y
-apt-get install -y nginx git ec2-instance-connect
+apt-get install -y nginx git ec2-instance-connect ruby
 git config --global user.name "ubuntu"
 git config --global user.email "ubuntu@email.com"
 git clone https://github.com/zedmaster/coodesh.git
@@ -57,6 +57,8 @@ resource "aws_launch_template" "example" {
       volume_size = 8
       volume_type = "gp2"
     }
+
+
   }
 
   network_interfaces {
@@ -79,7 +81,7 @@ resource "aws_launch_template" "example" {
     http_endpoint               = "enabled"
   }
 
-
+  #tags = { env = "all" }
 
 }
 
