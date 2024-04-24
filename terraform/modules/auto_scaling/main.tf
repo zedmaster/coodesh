@@ -7,7 +7,7 @@ apt-get install -y nginx git ec2-instance-connect ruby
 git config --global user.name "ubuntu"
 git config --global user.email "ubuntu@email.com"
 git clone https://github.com/zedmaster/coodesh.git
-cp -R /coodesh/* /var/www/html/
+cp /coodesh/index.html /var/www/html/
 service nginx restart
 wget https://aws-codedeploy-us-east-1.s3.amazonaws.com/latest/install
 chmod +x install
