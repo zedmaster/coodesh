@@ -2,7 +2,18 @@ version: 0.2
 
 phases:
   build:
-    commands:      
+    commands:
+      # Listar e pegar o primeiro ID do launch template
+      - LAUNCH_TEMPLATE_ID=$(aws ec2 describe-launch-templates --query 'LaunchTemplates[0].LaunchTemplateId' --output text)      
+      # Listar todas as versões do launch template e extrair números de versão
+      - version_numbers=$(aws ec2 describe-launch-template-versions --launch-template-id $LAUNCH_TEMPLATE_ID --query 'LaunchTemplateVersions[*].VersionNumber' --output text)
+      # Encontrar o número máximo entre os números de versão
+      - max_version=$(echo "$version_numbers" | tr '\t' '\n' | sort -nr | head -n 1)
+      # Número máximo
+      - Latest=$((max_version))
+      - Latest_NEW=$((max_version + 1))
+      - echo "$LAUNCH_TEMPLATE_ID" > info.txt
+
       # Encontrar o ID do grupo de segurança chamado "web"
       - SECURITY_GROUP_ID=$(aws ec2 describe-security-groups --filters Name=group-name,Values=web --query 'SecurityGroups[0].GroupId' --output text)
       # Iniciar uma instância EC2
@@ -12,24 +23,14 @@ phases:
       # Esperar até que a instância esteja em execução
       - aws ec2 wait instance-running --instance-ids $INSTANCE_ID
       # Criar uma AMI da instância
-      - AMI_ID=$(aws ec2 create-image --instance-id $INSTANCE_ID --name "V$INSTANCE_ID" --no-reboot --output text)
+      - AMI_ID=$(aws ec2 create-image --instance-id $INSTANCE_ID --name "$INSTANCE_ID-VLatest_NEW" --no-reboot --output text)
       # Esperar até que a AMI esteja disponível
       - aws ec2 wait image-available --image-ids $AMI_ID
       # Excluir a instância
       - aws ec2 terminate-instances --instance-ids $INSTANCE_ID
 
 
-      # Listar e pegar o primeiro ID do launch template
-      - LAUNCH_TEMPLATE_ID=$(aws ec2 describe-launch-templates --query 'LaunchTemplates[0].LaunchTemplateId' --output text)
       
-      # Listar todas as versões do launch template e extrair números de versão
-      - version_numbers=$(aws ec2 describe-launch-template-versions --launch-template-id $LAUNCH_TEMPLATE_ID --query 'LaunchTemplateVersions[*].VersionNumber' --output text)
-      # Encontrar o número máximo entre os números de versão
-      - max_version=$(echo "$version_numbers" | tr '\t' '\n' | sort -nr | head -n 1)
-      # Número máximo
-      - Latest=$((max_version))
-
-      - echo "$LAUNCH_TEMPLATE_ID" > info.txt
       
       # Criar uma nova versão do launch template modificando o image_id
       - |
