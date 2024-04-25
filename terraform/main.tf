@@ -62,9 +62,11 @@ module "codepipeline" {
   github_owner                     = var.github_owner
   github_repo                      = var.github_repo
   github_token                     = var.github_token
+  github_repository_id             = var.github_repository_id
   s3_bucket                        = var.s3_bucket
   pipeline_role_arn                = module.iam.pipeline_role_arn
   codebuild_project_name           = module.codebuild.codebuild_project_name
   codedeploy_app_name              = module.codedeploy.codedeploy_app_name
   codedeploy_deployment_group_name = module.codedeploy.codedeploy_deployment_group_name
+  codestar_connection_arn          = module.codestar.codestar_connection_arn
 }

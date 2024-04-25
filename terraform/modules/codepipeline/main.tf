@@ -1,6 +1,8 @@
 resource "aws_codepipeline" "example" {
-  name     = "coodesh-pipeline"
-  role_arn = var.pipeline_role_arn
+  name           = "coodesh-pipeline"
+  role_arn       = var.pipeline_role_arn
+  execution_mode = "QUEUED"
+  pipeline_type  = "V2"
 
   artifact_store {
     location = var.s3_bucket
@@ -13,18 +15,19 @@ resource "aws_codepipeline" "example" {
     action {
       name             = "SourceAction"
       category         = "Source"
-      owner            = "ThirdParty"
-      provider         = "GitHub"
-      version          = "2"
+      owner            = "AWS"
+      provider         = "CodeStarSourceConnection"
+      version          = "1"
       output_artifacts = ["source_output"]
 
       configuration = {
         ConnectionArn        = var.codestar_connection_arn
         FullRepositoryId     = var.github_repository_id
-        BranchName           = "master"
+        BranchName           = "main"
         OutputArtifactFormat = "CODEPIPELINE"
       }
     }
+
   }
 
   stage {

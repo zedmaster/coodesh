@@ -11,6 +11,12 @@ resource "aws_security_group" "web" {
     cidr_blocks = ["0.0.0.0/0"] // Permite o acesso de qualquer lugar na Internet
   }
 
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] // Permite o acesso de qualquer lugar na Internet
+  }
 
 
   # Permita o tráfego de saúde do ALB
