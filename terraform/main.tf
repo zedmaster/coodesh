@@ -43,14 +43,11 @@ module "iam" {
 module "codestar" {
   source                     = "./modules/codestar"
   connection_name            = ""
-  github_token               = var.github_token
   aim_codepipeline_role_name = module.iam.aim_codepipeline_role_name
 }
 
 module "codebuild" {
   source             = "./modules/codebuild"
-  github_owner       = var.github_owner
-  github_repo        = var.github_repo
   codebuild_role_arn = module.iam.codebuild_role_arn
 }
 module "codedeploy" {
@@ -60,9 +57,6 @@ module "codedeploy" {
 
 module "codepipeline" {
   source                           = "./modules/codepipeline"
-  github_owner                     = var.github_owner
-  github_repo                      = var.github_repo
-  github_token                     = var.github_token
   github_repository_id             = var.github_repository_id
   s3_bucket                        = var.s3_bucket
   pipeline_role_arn                = module.iam.pipeline_role_arn

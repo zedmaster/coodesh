@@ -2,7 +2,16 @@
 
 Este projeto é um teste para admissão.
 O teste consiste em montar um ambiente utilizando IAC para criar a rede, as subnets, o Aplication Load Balance, o Auto Scaling, o Target Group e o template para subir o EC2 com a aplicação, que é um site com apenas um html. 
-A outra parte do teste consiste em utilizar o AWS Pipeline para realizar a atualização da aplicação, a cada vez que for feito um commit no branch main.
+
+![arquitetura](01.jpg)
+
+
+
+A outra parte do teste consiste em utilizar o AWS Pipeline para realizar a atualização da aplicação, a cada vez que for feito um commit no branch main. 
+Quando for realizado um push no branch main do projeto do Github, o AWS Pipeline vai iniciar a build da aplicação, gerando uma imagem nova atualizada e criando um novo template e a aplicando o deploy atualizando as instancias EC2.
+
+![pipeline](02.jpg)
+
 
 ## Descrição das tecnologias
 
@@ -47,3 +56,5 @@ Caso tudo ocorra bem, para criar os artefatos digite:
 ```
 terraform apply -auto-approve 
 ```
+
+

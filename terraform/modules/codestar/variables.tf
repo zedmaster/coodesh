@@ -3,10 +3,6 @@ variable "connection_name" {
   type        = string
 }
 
-variable "github_token" {
-  description = "Token de acesso do GitHub"
-  type        = string
-}
 
 variable "aim_codepipeline_role_name" {
   description = "Token de acesso do GitHub"
