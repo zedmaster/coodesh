@@ -21,10 +21,9 @@ resource "aws_codepipeline" "example" {
       output_artifacts = ["source_output"]
 
       configuration = {
-        ConnectionArn        = var.codestar_connection_arn
-        FullRepositoryId     = var.github_repository_id
-        BranchName           = "main"
-        OutputArtifactFormat = "CODEPIPELINE"
+        ConnectionArn    = var.codestar_connection_arn
+        FullRepositoryId = var.github_repository_id
+        BranchName       = "main"
       }
     }
 
@@ -67,3 +66,5 @@ resource "aws_codepipeline" "example" {
     }
   }
 }
+
+

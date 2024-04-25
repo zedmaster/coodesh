@@ -41,9 +41,10 @@ module "iam" {
 }
 
 module "codestar" {
-  source          = "./modules/codestar"
-  connection_name = ""
-  github_token    = var.github_token
+  source                     = "./modules/codestar"
+  connection_name            = ""
+  github_token               = var.github_token
+  aim_codepipeline_role_name = module.iam.aim_codepipeline_role_name
 }
 
 module "codebuild" {
