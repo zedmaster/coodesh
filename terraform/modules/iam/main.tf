@@ -226,6 +226,66 @@ EOF
   }
 }
 
+
+resource "aws_iam_policy" "codebuild_policy" {
+  name   = "coodesh-codebuild-policy"
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:logs:us-east-1:563191627764:log-group:/aws/codebuild/coodesh-codebuild-project",
+                "arn:aws:logs:us-east-1:563191627764:log-group:/aws/codebuild/coodesh-codebuild-project:*"
+            ],
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:s3:::codepipeline-us-east-1-*"
+            ],
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:GetObjectVersion",
+                "s3:GetBucketAcl",
+                "s3:GetBucketLocation"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "codebuild:CreateReportGroup",
+                "codebuild:CreateReport",
+                "codebuild:UpdateReport",
+                "codebuild:BatchPutTestCases",
+                "codebuild:BatchPutCodeCoverages"
+            ],
+            "Resource": [
+                "arn:aws:codebuild:us-east-1:563191627764:report-group/coodesh*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": "ec2:*",
+            "Resource": "*"
+        }
+    ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "codebuild_attachment" {
+  role       = aws_iam_role.codebuild_role.name
+  policy_arn = aws_iam_policy.codebuild_policy.arn
+}
+
 resource "aws_iam_role" "codedeploy_role" {
   name               = "coodesh-codedeploy-role"
   assume_role_policy = <<EOF
@@ -245,6 +305,39 @@ EOF
   tags = {
     Environment = "all"
   }
+}
+
+
+resource "aws_iam_policy" "codedeploy_policy" {
+  name        = "coodesh-codedeploy-policy"
+  description = "Policy for CodeDeploy Role"
+
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "iam:PassRole",
+                "ec2:*",
+                "s3:*",
+                "elasticloadbalancing:*",
+                "cloudwatch:*",
+                "autoscaling:*"
+
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "codedeploy_policy_attachment" {
+  role       = aws_iam_role.codedeploy_role.name
+  policy_arn = aws_iam_policy.codedeploy_policy.arn
 }
 
 

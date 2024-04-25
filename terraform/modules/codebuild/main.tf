@@ -2,7 +2,7 @@ resource "aws_codebuild_project" "example" {
   name         = "coodesh-codebuild-project"
   service_role = var.codebuild_role_arn
   artifacts {
-    type = "NO_ARTIFACTS"
+    type = "CODEPIPELINE" # Definindo o tipo de artefato como CODEPIPELINE
   }
 
   environment {
@@ -16,10 +16,7 @@ resource "aws_codebuild_project" "example" {
   }
 
   source {
-    type            = "GITHUB"
-    location        = "https://github.com/${var.github_owner}/${var.github_repo}"
-    git_clone_depth = 1
-    buildspec       = "buildspec.yml"
+    type = "CODEPIPELINE" # Definindo o tipo de fonte como CODEPIPELINE
   }
 }
 
